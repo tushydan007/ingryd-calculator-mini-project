@@ -1,81 +1,49 @@
-// solution to palindrome question
-function palindrome(arg) {
-  return arg.split("").reverse().join("");
+const displayElement = document.getElementById("display");
+
+let currentInputAsString = "";
+let currentOperator = "";
+let previousInputAsString = "";
+let iClearDisplay = false;
+
+function clearDisplay() {
+  currentInputAsString = "";
+  currentOperator = "";
+  previousInputAsString = "";
+  iClearDisplay = false;
+  displayElement.textContent = currentInputAsString || "0";
 }
 
-// solution to check prime number
-function isPrime(number) {
-  if (number <= 1) {
-    return false;
+function appendNumber(number) {
+  if (iClearDisplay) {
+    currentInputAsString = "";
+    iClearDisplay = false;
   }
-  for (let index = 2; index < number; index++) {
-    if (number % index === 0) {
-      return false;
-    }
-  }
-  return true;
+  currentInputAsString += number;
+  displayElement.textContent = currentInputAsString || "0";
 }
 
-console.log(isPrime(6));
-
-function checkPrime(params) {
-  for (const num of params) {
-    if (isPrime(num)) {
-      return true;
-    }
+function appendOperator(operator) {
+  if (currentOperator !== "") {
+    calculate();
   }
-  return false;
+  currentOperator = operator;
+  previousInputAsString = currentInputAsString;
+  currentInputAsString = "";
 }
 
-console.log(checkPrime([6, 4, 6, 8, 9]));
-
-// solution to sum nested arrays
-const nestedArrays = [
-  [2, 4],
-  [5, 3],
-  [
-    [5, 2],
-    [3, 1],
-  ],
-];
-
-const sumNestedArrays = (param) => {
-  let sum = 0;
-  const arrs = param.flat(2);
-
-  for (const value of arrs) {
-    sum += value;
+function calculate() {
+  const num1 = parseFloat(previousInputAsString);
+  const num2 = parseFloat(currentInputAsString);
+  if (currentOperator === "+") {
+    currentInputAsString = (num1 + num2).toString();
+  } else if (currentOperator === "-") {
+    currentInputAsString = (num1 - num2).toString();
+  } else if (currentOperator === "x") {
+    currentInputAsString = (num1 * num2).toString();
+  } else if (currentOperator === "/") {
+    currentInputAsString = (num1 / num2).toString();
   }
-
-  return sum;
-};
-console.log(sumNestedArrays(nestedArrays));
-
-// solution of an Anagram
-function isAnagram(firstString, secondString) {
-  let string1 = firstString.trim().toLowerCase();
-  let string2 = secondString.trim().toLowerCase();
-
-  const sortedString1 = string1.split("").sort().join("");
-  const sortedString2 = string2.split("").sort().join("");
-
-  return sortedString1 === sortedString2;
+  iClearDisplay = true;
+  currentOperator = "";
+  displayElement.textContent = currentInputAsString || "0";
 }
-
-// solution to return the longest word in a sentence
-function longestWordInSentence(sentence) {
-  const words = sentence.split(" ");
-
-  let longestWord = "";
-
-  for (const word of words) {
-    if (word.length > longestWord.length) {
-      longestWord = word;
-    }
-  }
-
-  return longestWord;
-}
-
-const sentence = "It's a sunny day";
-console.log(longestWordInSentence(sentence));
